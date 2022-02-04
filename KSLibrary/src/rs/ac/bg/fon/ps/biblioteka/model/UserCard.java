@@ -6,12 +6,13 @@ package rs.ac.bg.fon.ps.biblioteka.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.sql.Date;
 
 /**
  *
  * @author Dragana Stefanovic
  */
-public class UserCard implements Serializable {
+public class UserCard extends AbstractDO implements Serializable {
     private Long id;
     private String CardNumber;
     private LocalDate issueDate;
@@ -52,6 +53,26 @@ public class UserCard implements Serializable {
     @Override
     public String toString() {
        return CardNumber; }
+
+    @Override
+    public String getAttributeList() {
+        return "brojClanskeKarte, datumIzdavanja, datumIsteka";
+         }
+
+    @Override
+    public String getClassName() {
+        return "clanskaKarta";
+         }
+
+    @Override
+    public String getAttributeValues() {
+        return "'"+CardNumber+"', '"+Date.valueOf(issueDate)+"', '"+Date.valueOf(expiryDate)+"'";
+            }
+
+    @Override
+    public String getQueryCondition() {
+        return "brojClanskeKarte= '"+CardNumber+"'";
+         }
     
     
     

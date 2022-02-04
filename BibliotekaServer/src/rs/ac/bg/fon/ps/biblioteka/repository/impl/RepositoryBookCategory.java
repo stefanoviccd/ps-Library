@@ -10,6 +10,7 @@ import rs.ac.bg.fon.ps.biblioteka.model.BookCategory;
 import java.util.List;
 import java.sql.Statement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 /**
  *
@@ -48,8 +49,13 @@ public class RepositoryBookCategory implements DbRepository<BookCategory, Long> 
 
     @Override
     public List<BookCategory> getAll() throws Exception {
-        //TODO: Implement later
-        return null;
+        List<BookCategory>  returnValue=new ArrayList<>();
+      BookCategory[] categories=BookCategory.values();
+        for (BookCategory category : categories) {
+            returnValue.add(category);
+            
+        }
+        return returnValue;
           }
 
     @Override

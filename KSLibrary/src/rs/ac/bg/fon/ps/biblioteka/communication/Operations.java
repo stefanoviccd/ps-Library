@@ -31,7 +31,9 @@ public class Operations {
     public static final int SERVER_STOPPED=20;
     public static final int UPDATES=21;
     public static final int SERVER_STOPPED_ACK=22;
-    public static int STOP=23;
+    public static final int STOP=23;
+    public static final int GET_ALL_USER_RENTS=24;
+    public static final int GET_USERS_BY_NAME=25;
     
     
     

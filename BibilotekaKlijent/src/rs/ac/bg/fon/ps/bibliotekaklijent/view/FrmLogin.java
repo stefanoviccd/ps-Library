@@ -19,8 +19,15 @@ import rs.ac.bg.fon.ps.bibliotekaklijent.validation.Validator;
  * @author Dragana Stefanovic
  */
 public class FrmLogin extends javax.swing.JFrame {
+    
 
     private static Librarian currentUser;
+    private FrmMain frmMain;
+
+    public FrmMain getFrmMain() {
+        return frmMain;
+    }
+    
 
     /**
      * Creates new form FrmLogin
@@ -109,14 +116,15 @@ public class FrmLogin extends javax.swing.JFrame {
             CurrentUser.setCurrentUser(currentUser);
             JOptionPane.showMessageDialog(this, "Dobrodošli, " + currentUser.getUsername());
             this.dispose();
-            new FrmMain().setVisible(true);
+            frmMain=new FrmMain(currentUser);
+            frmMain.setVisible(true);
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(this, "Greska: " + "Server prestao sa radom.", "Greska", JOptionPane.ERROR_MESSAGE);
             this.dispose();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Greska: " + e.getMessage(), "Greska", JOptionPane.ERROR_MESSAGE);
-            System.out.println("blabla");
             e.printStackTrace();
+            
         }
 
     }//GEN-LAST:event_btnLoginActionPerformed
@@ -145,7 +153,7 @@ public class FrmLogin extends javax.swing.JFrame {
             CurrentUser.setCurrentUser(currentUser);
             JOptionPane.showMessageDialog(this, "Dobrodošli, " + currentUser.getUsername());
             this.dispose();
-            FrmMain frm = new FrmMain();
+            FrmMain frm = new FrmMain(currentUser);
 
             frm.setVisible(true);
         }

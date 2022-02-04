@@ -13,7 +13,12 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.text.View;
 import rs.ac.bg.fon.ps.biblioteka.constants.ServerConstants;
+import rs.ac.bg.fon.ps.biblioteka.controller.Controller;
+import rs.ac.bg.fon.ps.biblioteka.form.ViewLibrariansForm;
+import rs.ac.bg.fon.ps.biblioteka.form.tableModel.TableModelWorkers;
+import rs.ac.bg.fon.ps.biblioteka.model.Librarian;
 
 /**
  *
@@ -23,6 +28,7 @@ public class ServerThread extends Thread {
 
     private ServerSocket serverSocket;
     private List<HandleClientThread> clients;
+    private ViewLibrariansForm librariansForm;
 
     public ServerThread() throws IOException {
         Properties properties = new Properties();
@@ -69,9 +75,32 @@ public class ServerThread extends Thread {
     }
 
     void logout(HandleClientThread ct) throws IOException {
+
         ct.getSocket().close();
         removeClient(ct);
 
+    }
+
+    void setUserLoggedIn(Librarian dbUser, boolean loggedIn) {
+        ((TableModelWorkers) librariansForm.getTblRadnici().getModel()).updateWorker(dbUser, loggedIn);
+    }
+
+    public void setLibrariansForm(ViewLibrariansForm v) {
+        librariansForm = v;
+    }
+
+    public void logOutAllUsers() {
+        for (HandleClientThread client : clients) {
+
+            Librarian l = client.getUser();
+
+            if (l != null) {
+                Controller.getInstance().logout(l);
+                setUserLoggedIn(l, false);
+                System.out.println("Korisnik izlogovan: " + l.getUsername());
+            }
+
+        }
     }
 
 }

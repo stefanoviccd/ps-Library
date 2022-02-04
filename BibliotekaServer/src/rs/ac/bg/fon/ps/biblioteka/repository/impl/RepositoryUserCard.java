@@ -4,6 +4,7 @@
  */
 package rs.ac.bg.fon.ps.biblioteka.repository.impl;
 
+import java.io.IOException;
 import rs.ac.bg.fon.ps.biblioteka.db.DbConnectionFactory;
 import rs.ac.bg.fon.ps.biblioteka.db.DbRepository;
 import rs.ac.bg.fon.ps.biblioteka.exception.NoUserCartFoundException;
@@ -13,7 +14,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import rs.ac.bg.fon.ps.biblioteka.broker.DatabaseBroker;
 
 /**
  *
@@ -23,6 +28,12 @@ public class RepositoryUserCard implements DbRepository<UserCard, Long> {
 
     private Statement statement;
     private PreparedStatement pstatement;
+    private DatabaseBroker dbBroker;
+
+    public RepositoryUserCard() {
+        dbBroker=new DatabaseBroker();
+    }
+    
 
     @Override
     public List<UserCard> getAll() throws Exception {
@@ -32,31 +43,35 @@ public class RepositoryUserCard implements DbRepository<UserCard, Long> {
 
     @Override
     public void add(UserCard t) throws Exception {
-        String query = "INSERT INTO clanskaKarta (brojClanskeKarte, datumIzdavanja, datumIsteka) VALUES (?,?,?)";
+      /*  String query = "INSERT INTO clanskaKarta (brojClanskeKarte, datumIzdavanja, datumIsteka) VALUES (?,?,?)";
         pstatement = DbConnectionFactory.getInstance().getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
         pstatement.setString(1, t.getCardNumber());
         pstatement.setDate(2, Date.valueOf(t.getIssueDate()));
         pstatement.setDate(3, Date.valueOf(t.getExpiryDate()));
         pstatement.executeUpdate();
-        ResultSet ckKey = statement.getGeneratedKeys();
+        pstatement.close();
+        /*        ResultSet ckKey = statement.getGeneratedKeys();
         Long cardId = null;
         if (ckKey.next()) {
             cardId = ckKey.getLong(1);
-        }
+            t.setId(cardId);
+        }*/
+      dbBroker.add(t);
     }
 
     @Override
     public void delete(UserCard t) throws Exception {
-        String query = "DELETE FROM clanskakarta WHERE id=" + t.getId();
+       /* String query = "DELETE FROM clanskakarta WHERE id=" + t.getId();
 
         statement = DbConnectionFactory.getInstance().getConnection().createStatement();
         statement.executeUpdate(query);
-        statement.close();
+        statement.close();*/
+       dbBroker.delete(t);
     }
 
     @Override
     public void edit(UserCard oldOne, UserCard newOne) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //Implement later
     }
 
     @Override
@@ -79,6 +94,25 @@ public class RepositoryUserCard implements DbRepository<UserCard, Long> {
             return cards;
         }
         throw new NoUserCartFoundException("Clanska karta ne postoji!");
+    }
+
+    public void updateCardNumber(UserCard oldCard, UserCard newCard) throws SQLException {
+        try {
+
+            String query = "UPDATE clanskakarta SET brojClanskeKarte= " + newCard.getCardNumber() + " WHERE id=" + oldCard.getId();
+            Statement s = DbConnectionFactory.getInstance().getConnection().createStatement();
+            s.executeUpdate(query);
+            query = "UPDATE clanskakarta SET datumIzdavanja='" + Date.valueOf(newCard.getIssueDate()) + "' WHERE id=" + oldCard.getId();
+            s.executeUpdate(query);
+            query = "UPDATE clanskakarta SET datumIsteka='" + Date.valueOf(newCard.getExpiryDate()) + "' WHERE id=" + oldCard.getId();
+            s.executeUpdate(query);
+            this.commit();
+            s.close();
+
+        } catch (IOException ex) {
+            Logger.getLogger(RepositoryUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
 }

@@ -259,12 +259,38 @@ public class ControllerUI {
 
     }
 
-    public void logout() {
+    public void logout(Librarian user) {
         try {
-            Communication.getInstance().logout();
+            Communication.getInstance().logout(user);
         } catch (Exception ex) {
             Logger.getLogger(ControllerUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    public List<Rent> getAllUserRents(User u) throws Exception {
+         Request r = new Request();
+        List<Rent> userRents = new ArrayList<>();
+        r.setOperation(Operations.GET_ALL_USER_RENTS);
+        r.setArgument(u);
+        Response resp = Communication.getInstance().sendRequest(r);
+        if (resp.getResponseType().equals(ResponseType.ERROR)) {
+            throw resp.getException();
+        }
+        userRents = (List<Rent>) resp.getResult();
+        System.out.println("KOLIKO JE VRACENO:"+userRents.size());
+        return userRents;
+            }
+
+    public List<User> getUsersByName(String name) throws Exception {
+         Request request = new Request();
+        request.setOperation(Operations.GET_USERS_BY_NAME);
+
+        request.setArgument(name);
+        Response response = Communication.getInstance().sendRequest(request);
+        if (response.getResponseType().equals(ResponseType.ERROR)) {
+            throw response.getException();
+        }
+        return (List<User>) response.getResult();
+        }
 
 }

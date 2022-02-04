@@ -10,10 +10,39 @@ import java.io.Serializable;
  *
  * @author Dragana Stefanovic
  */
-public class Librarian implements Serializable {
+public class Librarian extends AbstractDO implements Serializable {
     private Long id;
     private String username;
     private String password;
+    private String firstName;
+    private String lastName;
+    private boolean loggedIn;
+
+    public boolean isLoggedIn() {
+        return loggedIn;
+    }
+
+    public void setLoggedIn(boolean loggedIn) {
+        this.loggedIn = loggedIn;
+    }
+    
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+    
 
     public Librarian(Long id, String username, String password) {
         this.id = id;
@@ -47,6 +76,27 @@ public class Librarian implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    @Override
+    public String getAttributeList() {
+        return "username, password, ime, prezime";
+          }
+
+    @Override
+    public String getClassName() {
+        return "bibliotekar";
+            }
+
+    @Override
+    public String getAttributeValues() {
+        return "'"+username+"', '"+password+"', '"+firstName+"', '"+lastName+"'";
+         }
+
+    @Override
+    public String getQueryCondition() {
+        return "bibliotekarID="+id;
+            }
+    
     
     
 }

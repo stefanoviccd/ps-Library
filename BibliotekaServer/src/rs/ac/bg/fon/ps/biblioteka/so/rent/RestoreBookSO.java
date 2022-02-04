@@ -4,7 +4,11 @@
  */
 package rs.ac.bg.fon.ps.biblioteka.so.rent;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import rs.ac.bg.fon.ps.biblioteka.model.Book;
 import rs.ac.bg.fon.ps.biblioteka.model.Rent;
+import rs.ac.bg.fon.ps.biblioteka.repository.impl.RepositoryBook;
 import rs.ac.bg.fon.ps.biblioteka.repository.impl.RepositoryRent;
 import rs.ac.bg.fon.ps.biblioteka.so.AbstractSO;
 
@@ -15,9 +19,11 @@ import rs.ac.bg.fon.ps.biblioteka.so.AbstractSO;
 public class RestoreBookSO extends AbstractSO {
 
     RepositoryRent repositoryRent;
+    private RepositoryBook repositoryBook;
 
     public RestoreBookSO() {
         repositoryRent = new RepositoryRent();
+        repositoryBook=new RepositoryBook();
     }
 
     @Override
@@ -33,11 +39,17 @@ public class RestoreBookSO extends AbstractSO {
         Rent rent = (Rent) param;
         try {
             repositoryRent.restoreBook(rent);
+            updateBookCount(rent.getBook(),+1);
         } catch (Exception e) {
             e.printStackTrace();
             throw new Exception(e.getMessage());
         }
         return null;
     }
+
+    private void updateBookCount(Book book, int i) throws SQLException, IOException {
+        repositoryBook.updateBookCount(book, i);
+        
+          }
 
 }

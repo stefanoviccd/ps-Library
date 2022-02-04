@@ -18,18 +18,21 @@ import rs.ac.bg.fon.ps.biblioteka.bibilotekaklijent.client.thread.ServerStoppedL
 import rs.ac.bg.fon.ps.biblioteka.bibilotekaklijent.communication.Communication;
 import rs.ac.bg.fon.ps.biblioteka.bibilotekaklijent.controller.ControllerUI;
 import rs.ac.bg.fon.ps.biblioteka.communication.CurrentUser;
+import rs.ac.bg.fon.ps.biblioteka.model.Librarian;
 
 /**
  *
  * @author Dragana Stefanovic
  */
 public class FrmMain extends javax.swing.JFrame {
+    private Librarian currentUser;
 
     /**
      * Creates new form MainForm
      */
-    public FrmMain() {
+    public FrmMain(Librarian currentUser) {
         initComponents();
+        this.currentUser=currentUser;
         setTitle("Šabača biblioteka - glavna strana");
         txtUlogovanKorisnik.setText(CurrentUser.getCurrentUser().getUsername());
         txtUlogovanKorisnik.setEditable(false);
@@ -46,11 +49,12 @@ public class FrmMain extends javax.swing.JFrame {
             public void windowClosing(WindowEvent e) {
                 try {
 
-                    ControllerUI.getInstance().logout();
+                    ControllerUI.getInstance().logout(currentUser);
                     System.exit(0);
 
                 } catch (Exception ex) {
                     System.out.println("Konekcija prekinuta.");
+                       System.exit(0);
                 }
             }
 
@@ -273,7 +277,7 @@ public class FrmMain extends javax.swing.JFrame {
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         try {
-            Communication.getInstance().logout();
+            Communication.getInstance().logout(currentUser);
         } catch (Exception ex) {
             Logger.getLogger(FrmMain.class.getName()).log(Level.SEVERE, null, ex);
 

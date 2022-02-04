@@ -12,11 +12,16 @@ import rs.ac.bg.fon.ps.bibliotekaklijent.validation.Validator;
 import rs.ac.bg.fon.ps.bibliotekaklijent.view.tableModel.TableModelUser;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import rs.ac.bg.fon.ps.biblioteka.bibilotekaklijent.controller.ControllerUI;
+import rs.ac.bg.fon.ps.biblioteka.model.Rent;
+import rs.ac.bg.fon.ps.bibliotekaklijent.view.tableModel.TableModelUserRents;
 
 /**
  *
@@ -36,6 +41,7 @@ public class FrmChangeUserInfo extends javax.swing.JDialog {
         this.table = table;
         initComponents();
         setTitle("Informacije o korisniku");
+        tblIznajmljeneKnjige.setModel((new TableModelUserRents(new ArrayList())));
         FrameCenter.CenteredFrame(this);
         try {
             prepareForm();
@@ -72,6 +78,9 @@ public class FrmChangeUserInfo extends javax.swing.JDialog {
         jLabel7 = new javax.swing.JLabel();
         btnOtkazi = new javax.swing.JButton();
         btnIzmeni = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblIznajmljeneKnjige = new javax.swing.JTable();
+        btnRazduzi = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBounds(new java.awt.Rectangle(100, 100, 0, 0));
@@ -133,17 +142,37 @@ public class FrmChangeUserInfo extends javax.swing.JDialog {
             }
         });
 
+        tblIznajmljeneKnjige.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(tblIznajmljeneKnjige);
+
+        btnRazduzi.setText("Razduzi");
+        btnRazduzi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRazduziActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnSacuvaj, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnOtkazi, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnRazduzi, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
@@ -173,48 +202,57 @@ public class FrmChangeUserInfo extends javax.swing.JDialog {
                                     .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addComponent(btnGenerisi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txtBrojClanskeKarte))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
-                        .addComponent(btnIzmeni, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                        .addGap(37, 37, 37)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnIzmeni, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnOtkazi, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(51, 51, 51)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(btnIzmeni))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(txtIme, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(txtPrez, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(txtTelefon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtAdresa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(1, 1, 1)
-                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cmbKategorija, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(btnGenerisi)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtBrojClanskeKarte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(btnIzmeni))
+                        .addGap(10, 10, 10)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(txtIme, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(txtPrez, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(txtTelefon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtAdresa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(1, 1, 1)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cmbKategorija, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(btnGenerisi)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtBrojClanskeKarte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnOtkazi)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSacuvaj)
-                    .addComponent(btnOtkazi))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnRazduzi))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
 
         pack();
@@ -235,24 +273,28 @@ public class FrmChangeUserInfo extends javax.swing.JDialog {
         if (btnGenerisi.isEnabled()) {
             try {
                 validateInputs();
-                User oldUser = user;
+                //User oldUser=user;
 
-                user.setName(txtIme.getText());
-                user.setLastName(txtPrez.getText());
-                user.setPhoneNumber(txtTelefon.getText());
-                user.setAddress(txtAdresa.getText());
-                user.setUserCategory((UserCategory) cmbKategorija.getSelectedItem());
+                //user=new User();
+                User newUser = new User();
+
+                newUser.setName(txtIme.getText());
+                newUser.setLastName(txtPrez.getText());
+                newUser.setPhoneNumber(txtTelefon.getText());
+                newUser.setAddress(txtAdresa.getText());
+                newUser.setUserCategory((UserCategory) cmbKategorija.getSelectedItem());
                 UserCard userCard = new UserCard();
-                if (!txtBrojClanskeKarte.getText().trim().equals(user.getUsercard().getCardNumber())) {
-                    System.out.println("Clanska karta pre izmene: " + user.getUsercard().getCardNumber());
-                    userCard.setCardNumber(txtBrojClanskeKarte.getText());
+                if (!(txtBrojClanskeKarte.getText().trim().equals(user.getUsercard().getCardNumber()))) {
+                    userCard.setCardNumber(txtBrojClanskeKarte.getText().trim());
                     userCard.setIssueDate(LocalDate.now());
                     userCard.setExpiryDate(userCard.getIssueDate().plusYears(1));
-                    user.setUsercard(userCard);
-                    System.out.println("Clanska karta posle izmene: " + user.getUsercard().getCardNumber());
+                    newUser.setUsercard(userCard);
+               
 
                 }
-                ControllerUI.getInstance().updateUser(oldUser, user);
+                newUser.setUserId(user.getUserId());
+                ControllerUI.getInstance().updateUser(user, newUser);
+                // user=newUser;
 
                 ((TableModelUser) table.getModel()).setUsers(ControllerUI.getInstance().getUsers());
 
@@ -282,6 +324,27 @@ public class FrmChangeUserInfo extends javax.swing.JDialog {
 
     }//GEN-LAST:event_btnIzmeniActionPerformed
 
+    private void btnRazduziActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRazduziActionPerformed
+        int selectedRow = tblIznajmljeneKnjige.getSelectedRow();
+        if (selectedRow != -1) {
+            Rent rent = ((TableModelUserRents) tblIznajmljeneKnjige.getModel()).getRent(selectedRow);
+            if (rent.getReturnDate() != null) {
+                JOptionPane.showMessageDialog(this, "Knjiga je prethodno razdužena.");
+            } else {
+                try {
+                    ControllerUI.getInstance().restoreBook(rent);
+                    JOptionPane.showMessageDialog(this, "Uspešno ste razdužili knjigu.");
+                    ((TableModelUserRents) tblIznajmljeneKnjige.getModel()).getRent(selectedRow).setReturnDate(LocalDate.now());
+                    ((TableModelUserRents) tblIznajmljeneKnjige.getModel()).fireTableDataChanged();
+
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Neuspešno razduživanje knjige.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+
+        }
+    }//GEN-LAST:event_btnRazduziActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -290,6 +353,7 @@ public class FrmChangeUserInfo extends javax.swing.JDialog {
     private javax.swing.JButton btnGenerisi;
     private javax.swing.JButton btnIzmeni;
     private javax.swing.JButton btnOtkazi;
+    private javax.swing.JButton btnRazduzi;
     private javax.swing.JButton btnSacuvaj;
     private javax.swing.JComboBox cmbKategorija;
     private javax.swing.JLabel jLabel1;
@@ -299,6 +363,8 @@ public class FrmChangeUserInfo extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tblIznajmljeneKnjige;
     private javax.swing.JTextField txtAdresa;
     private javax.swing.JTextField txtBrojClanskeKarte;
     private javax.swing.JTextField txtIme;
@@ -314,6 +380,8 @@ public class FrmChangeUserInfo extends javax.swing.JDialog {
         txtTelefon.setText(user.getPhoneNumber());
         txtAdresa.setText(user.getAddress());
         txtBrojClanskeKarte.setText(user.getUsercard().getCardNumber());
+        List<Rent> r = ControllerUI.getInstance().getAllUserRents(user);
+        ((TableModelUserRents) tblIznajmljeneKnjige.getModel()).setRents(r);
 
     }
 

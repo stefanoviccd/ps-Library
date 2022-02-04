@@ -5,7 +5,11 @@
 package rs.ac.bg.fon.ps.biblioteka.so.user;
 
 import rs.ac.bg.fon.ps.biblioteka.model.User;
+import rs.ac.bg.fon.ps.biblioteka.model.UserCard;
+import rs.ac.bg.fon.ps.biblioteka.model.UserCategory;
 import rs.ac.bg.fon.ps.biblioteka.repository.impl.RepositoryUser;
+import rs.ac.bg.fon.ps.biblioteka.repository.impl.RepositoryUserCard;
+import rs.ac.bg.fon.ps.biblioteka.repository.impl.RepositoryUserCategory;
 import rs.ac.bg.fon.ps.biblioteka.so.AbstractSO;
 
 /**
@@ -15,9 +19,13 @@ import rs.ac.bg.fon.ps.biblioteka.so.AbstractSO;
 public class AddUserSO extends AbstractSO {
 
     RepositoryUser repositoryUser;
+    RepositoryUserCard repositoryUserCard;
+    RepositoryUserCategory repositoryUserCategory;
 
     public AddUserSO() {
         repositoryUser = new RepositoryUser();
+        repositoryUserCard=new RepositoryUserCard();
+        repositoryUserCategory=new RepositoryUserCategory();
     }
 
     @Override
@@ -33,7 +41,16 @@ public class AddUserSO extends AbstractSO {
 
     @Override
     protected Object executeOperation(Object param) throws Exception {
-        repositoryUser.add((User) param);
+        User u=(User) param;
+        repositoryUserCard.add(u.getUsercard());
+        String query="SELECT * FROM clanskakarta WHERE brojClanskeKarte= '"+u.getUsercard().getCardNumber()+"'";
+        UserCard card=repositoryUserCard.getByQuery(query).get(0);
+        u.setUsercard(card);
+        query = "SELECT * FROM kategorijaclanova WHERE naziv='" + u.getUserCategory().getName() + "'";
+        UserCategory category=repositoryUserCategory.getByQuery(query).get(0);
+        u.setUserCategory(category);
+        repositoryUser.add(u);
+        
         return null;
     }
 

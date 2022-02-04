@@ -4,6 +4,7 @@
  */
 package rs.ac.bg.fon.ps.biblioteka.bibilotekaklijent.client;
 
+import java.awt.Window;
 import java.io.IOException;
 import static java.lang.Thread.sleep;
 import java.net.Socket;
@@ -16,12 +17,18 @@ import rs.ac.bg.fon.ps.biblioteka.communication.Request;
 import rs.ac.bg.fon.ps.biblioteka.communication.Response;
 import rs.ac.bg.fon.ps.biblioteka.communication.Sender;
 import rs.ac.bg.fon.ps.bibliotekaklijent.view.FrmLogin;
+import rs.ac.bg.fon.ps.bibliotekaklijent.view.FrmMain;
 
 /**
  *
  * @author Dragana Stefanovic
  */
 public class Client {
+
+    private FrmLogin frm;
+    private FrmMain frmMain;
+
+    
 
     /**
      * @param args the command line arguments
@@ -45,7 +52,7 @@ public class Client {
         Communication.getInstance().setSender(sender);
         ThreadListener listener = new ThreadListener(receiver, sender);
 
-        FrmLogin frm = new FrmLogin();
+        frm = new FrmLogin();
         frm.setVisible(true);
 
     }
@@ -76,6 +83,10 @@ public class Client {
 
             } catch (Exception ex) {
                 System.out.println("Prekinuta konekcija.");
+                System.exit(0);
+                
+                
+
             }
         }
 
@@ -88,7 +99,6 @@ public class Client {
                     ControllerUI.getInstance().finish();
                     this.interrupt();
                 } else {
-                   // System.out.println("Server je aktivan.");
 
                 }
             } catch (Exception ex) {

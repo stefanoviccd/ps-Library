@@ -6,12 +6,13 @@ package rs.ac.bg.fon.ps.biblioteka.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.sql.Date;
 
 /**
  *
  * @author Dragana Stefanovic
  */
-public class Rent implements Serializable {
+public class Rent extends AbstractDO implements Serializable {
     private Long id;
     private Book book;
     private User user;
@@ -58,6 +59,26 @@ public class Rent implements Serializable {
     public void setReturnDate(LocalDate returnDate) {
         this.returnDate = returnDate;
     }
+
+    @Override
+    public String getAttributeList() {
+        return "clanId, knjigaId, datumIznajmljivanja";
+           }
+
+    @Override
+    public String getClassName() {
+        return "iznajmljivanje";
+           }
+
+    @Override
+    public String getAttributeValues() {
+        return ""+user.getUserId()+", "+book.getBookid()+", "+"'"+Date.valueOf(rentalDate)+"'";
+        }
+
+    @Override
+    public String getQueryCondition() {
+        return null;
+            }
     
     
     

@@ -4,7 +4,6 @@
  */
 package rs.ac.bg.fon.ps.biblioteka.repository.impl;
 
-import java.io.IOException;
 import rs.ac.bg.fon.ps.biblioteka.controller.Controller;
 import rs.ac.bg.fon.ps.biblioteka.db.DbConnectionFactory;
 import rs.ac.bg.fon.ps.biblioteka.db.DbRepository;
@@ -16,11 +15,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Date;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import rs.ac.bg.fon.ps.biblioteka.broker.DatabaseBroker;
 import rs.ac.bg.fon.ps.biblioteka.model.Book;
 import rs.ac.bg.fon.ps.biblioteka.model.Rent;
 
@@ -32,6 +29,12 @@ public class RepositoryUser implements DbRepository<User, Long> {
 
     private Statement statement;
     private PreparedStatement ps;
+    private DatabaseBroker dbBroker;
+
+    public RepositoryUser() {
+        dbBroker=new DatabaseBroker();
+    }
+    
 
     @Override
     public List<User> getAll() throws Exception {
@@ -67,76 +70,43 @@ public class RepositoryUser implements DbRepository<User, Long> {
 
     @Override
     public void add(User t) throws Exception {
-        String query = "INSERT INTO clanskaKarta (brojClanskeKarte, datumIzdavanja, datumIsteka) VALUES (?,?,?)";
-        ps = DbConnectionFactory.getInstance().getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-        ps.setString(1, t.getUsercard().getCardNumber());
-        ps.setDate(2, Date.valueOf(t.getUsercard().getIssueDate()));
-        ps.setDate(3, Date.valueOf(t.getUsercard().getExpiryDate()));
-        ps.executeUpdate();
-        ResultSet ckKey = ps.getGeneratedKeys();
-        Long userCardId = null;
-        if (ckKey.next()) {
-            userCardId = ckKey.getLong(1);
-        }
-
-        query = "SELECT id FROM kategorijaclanova WHERE naziv='" + t.getUserCategory().getName() + "'";
-
-        statement = DbConnectionFactory.getInstance().getConnection().createStatement();
-        ResultSet rs = statement.executeQuery(query);
-        Long categoryId = null;
-        while (rs.next()) {
-            categoryId = rs.getLong(1);
-        }
-
-        query = "INSERT INTO clan (ime, prezime, brojTelefona, adresa,kategorijaId, clanskaKartaId) VALUES (?,?,?,?,?,?)";
+       /* String query = "INSERT INTO clan (ime, prezime, brojTelefona, adresa,kategorijaId, clanskaKartaId) VALUES (?,?,?,?,?,?)";
         ps = DbConnectionFactory.getInstance().getConnection().prepareStatement(query);
         ps.setString(1, t.getName());
         ps.setString(2, t.getLastName());
         ps.setString(3, t.getPhoneNumber());
         ps.setString(4, t.getAddress());
-        ps.setLong(5, categoryId);
-        ps.setLong(6, userCardId);
+        ps.setLong(5, t.getUserCategory().getUserCategoryId());
+        ps.setLong(6, t.getUsercard().getId());
         ps.executeUpdate();
         ps.close();
-        rs.close();
-        ckKey.close();
-        statement.close();
+        statement.close();*/
+       dbBroker.add(t);
 
     }
 
     @Override
     public void edit(User oldU, User newU) throws Exception {
-        String category = newU.getUserCategory().toString();
-        String query = "SELECT id FROM kategorijaclanova WHERE naziv='" + newU.getUserCategory().getName() + "'";
-        statement = DbConnectionFactory.getInstance().getConnection().createStatement();
-        ResultSet rs = statement.executeQuery(query);
-        Long categoryId = null;
-        while (rs.next()) {
-            categoryId = rs.getLong(1);
-        }
-
         String queryUser = "UPDATE clan SET ime=?, prezime=?, brojTelefona=?, adresa=?, kategorijaid=? WHERE id=?";
         ps = DbConnectionFactory.getInstance().getConnection().prepareStatement(queryUser);
         ps.setString(1, newU.getName());
         ps.setString(2, newU.getLastName());
         ps.setString(3, newU.getPhoneNumber());
         ps.setString(4, newU.getAddress());
-        ps.setLong(5, categoryId);
+        ps.setLong(5, newU.getUserCategory().getUserCategoryId());
         ps.setLong(6, oldU.getUserId());
         ps.executeUpdate();
         ps.close();
-        if (!oldU.getUsercard().getCardNumber().equals(newU.getUsercard().getCardNumber())) {
-            updateCardNumber(oldU.getUsercard(), newU.getUsercard());
-        }
 
     }
 
     @Override
     public void delete(User t) throws Exception {
-        String upit = "DELETE FROM clan WHERE id=" + t.getUserId();
+        /*String upit = "DELETE FROM clan WHERE id=" + t.getUserId();
         statement = DbConnectionFactory.getInstance().getConnection().createStatement();
         statement.executeUpdate(upit);
-        statement.close();
+        statement.close();*/
+        dbBroker.delete(t);
 
     }
 
@@ -203,7 +173,7 @@ public class RepositoryUser implements DbRepository<User, Long> {
         return users;
     }
 
-    public List<Rent> getUserRents(User u) throws Exception {
+   /* public List<Rent> getUserRents(User u) throws Exception {
         String query = "SELECT * FROM iznajmljivanje WHERE clanId=" + u.getUserId() + " AND datumVracanja IS NULL";
         statement = DbConnectionFactory.getInstance().getConnection().createStatement();
         ResultSet rs = statement.executeQuery(query);
@@ -223,9 +193,9 @@ public class RepositoryUser implements DbRepository<User, Long> {
 
         return rents;
 
-    }
+    }*/
 
-    public void rentBook(User u, Book b) throws Exception {
+   /* public void rentBook(User u, Book b) throws Exception {
         String query = "INSERT INTO iznajmljivanje (clanId, knjigaId,datumIznajmljivanja) VALUES (?,?,?)";
         ps = DbConnectionFactory.getInstance().getConnection().prepareStatement(query);
         ps.setLong(1, u.getUserId());
@@ -234,7 +204,7 @@ public class RepositoryUser implements DbRepository<User, Long> {
         ps.executeUpdate();
         updateBookCount(b, -1);
 
-    }
+    }*/
 
     private void updateBookCount(Book b, int value) throws Exception {
         int num = b.getNumberInStock() + value;
@@ -243,16 +213,16 @@ public class RepositoryUser implements DbRepository<User, Long> {
         statement.executeUpdate(updateBookCount);
     }
 
-    public void restoreBook(Rent rental) throws Exception {
+   /* public void restoreBook(Rent rental) throws Exception {
         String query = "UPDATE iznajmljivanje SET datumVracanja=? WHERE id=" + rental.getId();
         ps = DbConnectionFactory.getInstance().getConnection().prepareStatement(query);
         ps.setDate(1, Date.valueOf(LocalDate.now()));
         ps.executeUpdate();
         updateBookCount(rental.getBook(), +1);
         //commit();
-    }
+    }*/
 
-    public List<Rent> getRents() throws Exception {
+    /*public List<Rent> getRents() throws Exception {
         String query = "SELECT * FROM iznajmljivanje WHERE datumVracanja IS NULL";
         statement = DbConnectionFactory.getInstance().getConnection().createStatement();
         ResultSet rs = statement.executeQuery(query);
@@ -270,7 +240,7 @@ public class RepositoryUser implements DbRepository<User, Long> {
 
         }
         return rents;
-    }
+    }*/
 
     public boolean checkIfExists(User user) throws Exception {
         List<User> users = getAll();
@@ -283,7 +253,7 @@ public class RepositoryUser implements DbRepository<User, Long> {
     }
 
     public boolean checkIfRentsExist(User user) throws Exception {
-        List<Rent> rents = getUserRents(user);
+        List<Rent> rents = Controller.getInstance().getUserRents(user);
         if (rents.size() > 0) {
             return true;
         }
@@ -291,7 +261,7 @@ public class RepositoryUser implements DbRepository<User, Long> {
 
     }
 
-    private void updateCardNumber(UserCard oldCard, UserCard newCard) throws SQLException {
+   /* private void updateCardNumber(UserCard oldCard, UserCard newCard) throws SQLException {
         String query = "UPDATE clanskakarta SET brojClanskeKarte=? AND datumIzdavanja=? and datumIsteka=? WHERE brojClanskeKarte=?";
         try {
             ps = DbConnectionFactory.getInstance().getConnection().prepareStatement(query);
@@ -305,7 +275,7 @@ public class RepositoryUser implements DbRepository<User, Long> {
         ps.executeUpdate();
         ps.close();
 
-    }
+    }*/
 
     public boolean checkIfExists(User user, boolean includeUserCard) throws Exception {
         List<User> users = getAll();

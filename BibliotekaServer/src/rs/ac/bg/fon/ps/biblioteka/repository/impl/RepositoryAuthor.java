@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.sql.Statement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import rs.ac.bg.fon.ps.biblioteka.broker.DatabaseBroker;
+import rs.ac.bg.fon.ps.biblioteka.model.AbstractDO;
 
 /**
  *
@@ -19,6 +22,12 @@ import java.sql.ResultSet;
 public class RepositoryAuthor implements DbRepository<Author, Long> {
 
     private Statement statement;
+    private DatabaseBroker dbBroker;
+
+    public RepositoryAuthor() {
+        dbBroker=new DatabaseBroker();
+    }
+    
 
     @Override
     public List<Author> getAll() throws Exception {
@@ -40,10 +49,12 @@ public class RepositoryAuthor implements DbRepository<Author, Long> {
 
     @Override
     public void add(Author t) throws Exception {
-        String upit = "INSERT INTO autor (imePrezime) VALUES ('" + t.getAuthorName() + "')";
+        /*String upit = "INSERT INTO autor (imePrezime) VALUES ('" + t.getAuthorName() + "')";
         statement = DbConnectionFactory.getInstance().getConnection().createStatement();
         statement.executeUpdate(upit);
-        statement.close();
+        statement.close();*/
+        dbBroker.add(t);
+        
     }
 
     @Override
@@ -52,8 +63,14 @@ public class RepositoryAuthor implements DbRepository<Author, Long> {
     }
 
     @Override
-    public void delete(Author t) throws Exception {
-        //TODO: Implement later
+    public void delete(Author author) throws SQLException, Exception{
+            dbBroker.delete(author);
+            /*String query = "DELETE FROM autor WHERE id=" + author.getAuthorId();
+            statement = DbConnectionFactory.getInstance().getConnection().createStatement();
+            statement.executeUpdate(query);
+            statement.close();*/
+        
+
     }
 
     @Override
@@ -73,5 +90,11 @@ public class RepositoryAuthor implements DbRepository<Author, Long> {
 
         return dbAuthors;
     }
+
+
+
+
+
+ 
 
 }

@@ -11,6 +11,7 @@ import rs.ac.bg.fon.ps.biblioteka.communication.Receiver;
 import rs.ac.bg.fon.ps.biblioteka.communication.Request;
 import rs.ac.bg.fon.ps.biblioteka.communication.Response;
 import rs.ac.bg.fon.ps.biblioteka.communication.Sender;
+import rs.ac.bg.fon.ps.biblioteka.model.Librarian;
 
 /**
  *
@@ -59,9 +60,9 @@ public class Communication {
 
 
 
-    public void logout() throws Exception {
+    public void logout(Librarian user) throws Exception {
         try {
-            Request request = new Request(Operations.LOGOUT, null);
+            Request request = new Request(Operations.LOGOUT, user);
             sender.send(request);
 
         } catch (Exception ex) {

@@ -4,6 +4,7 @@
  */
 package rs.ac.bg.fon.ps.bibliotekaklijent.view.tableModel;
 
+import java.time.LocalDate;
 import rs.ac.bg.fon.ps.biblioteka.model.User;
 import rs.ac.bg.fon.ps.biblioteka.model.UserCard;
 import rs.ac.bg.fon.ps.biblioteka.model.UserCategory;
@@ -23,8 +24,8 @@ import rs.ac.bg.fon.ps.biblioteka.communication.ResponseType;
  */
 public class TableModelUser extends AbstractTableModel{
     private List<User> users;
-    private String[] columnNames=new String[]{"ID", "Ime", "Prezime", "Telefon", "Adresa", "Kategorija", "Broj clanske karte"};
-    private Class[] columnClasses=new Class[]{Long.class, String.class, String.class, String.class, String.class, UserCategory.class, UserCard.class};
+    private String[] columnNames=new String[]{"ID", "Ime", "Prezime", "Telefon", "Adresa", "Kategorija", "Broj clanske karte", "Clanska karta vazi do"};
+    private Class[] columnClasses=new Class[]{Long.class, String.class, String.class, String.class, String.class, UserCategory.class, UserCard.class, LocalDate.class};
     public TableModelUser() {
         try {
             Request request=new Request();
@@ -70,6 +71,7 @@ public class TableModelUser extends AbstractTableModel{
             case 4: return clan.getAddress();
             case 5: return clan.getUserCategory();
             case 6: return clan.getUsercard();
+            case 7: return clan.getUsercard().getExpiryDate();
             
         }
         return "n/a";

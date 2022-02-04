@@ -40,12 +40,18 @@ public class LoginSO extends AbstractSO {
             for (Librarian b : librarians) {
                 if (b.getUsername().equals(user.getUsername()) && b.getPassword().equals(user.getPassword())) {
                     currentUser = b;
+                    if(currentUser.isLoggedIn()==true){
+                    throw  new Exception("Korisnik je vec prijavljen.");
+                    }
+                    repositoryLibrarian.setUserIsLoggedIn(currentUser);
                     return currentUser;
                 }
 
             }
         } catch (Exception ex) {
-            throw new Exception("Greska prilikom logovanja.", ex);
+            ex.printStackTrace();
+            throw new Exception(ex.getMessage());
+       
         }
         throw new Exception("Nepoznat korisnik!");
 

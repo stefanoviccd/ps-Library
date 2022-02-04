@@ -31,10 +31,16 @@ public class HandleClientThread extends Thread {
 
     private ServerThread server;
     private Socket socket;
+    private Librarian user;
 
     public Socket getSocket() {
         return socket;
     }
+
+    public Librarian getUser() {
+        return user;
+    }
+    
 
     public HandleClientThread(ServerThread serverthread, Socket socket) {
         this.server = serverthread;
@@ -47,6 +53,7 @@ public class HandleClientThread extends Thread {
             handleClientsRequest(socket);
         } catch (SocketException se) {
             System.out.println("Klijent prekinuo program.");
+   
         } catch (Exception ex) {
             System.out.println("Klijent prekinuo program.");
         }
@@ -81,8 +88,10 @@ public class HandleClientThread extends Thread {
                         response = login(user);
                         break;
                     case Operations.GET_USERS_BY_USER_CARD:
-
                         response = getUsersByUserCard((String) request.getArgument());
+                        break;
+                    case Operations.GET_USERS_BY_NAME:
+                        response = getUsersByName((String) request.getArgument());
                         break;
                     case Operations.GET_USERS:
 
@@ -128,6 +137,9 @@ public class HandleClientThread extends Thread {
                     case Operations.GET_USER_RENTS:
                         response = getUserRents(request);
                         break;
+                    case Operations.GET_ALL_USER_RENTS:
+                        response = getAllUserRents(request);
+                        break;
                     case Operations.RESTORE_BOOK:
                         response = restoreBook(request);
                         break;
@@ -135,15 +147,18 @@ public class HandleClientThread extends Thread {
                         response = getRentals(request);
                         break;
                     case Operations.LOGOUT:
+                        logout(request);
                         server.logout(this);
+                        
                         break;
 
                     default: ;
                 }
                 new Sender(socket).send(response);
-                
+
             } catch (ClassNotFoundException ex) {
                 System.out.println("Klijent je prekinuo program.");
+                server.setUserLoggedIn(user, false);
             }
 
         }
@@ -157,9 +172,12 @@ public class HandleClientThread extends Thread {
             response.setResponseType(ResponseType.SUCCESS);
             response.setResult(dbUser);
             response.setOperation(Operations.LOGIN);
+            server.setUserLoggedIn(dbUser,true);
+            this.user=dbUser;
         } catch (Exception ex) {
             response.setResponseType(ResponseType.ERROR);
             response.setException(new Exception(ex.getMessage()));
+            ex.printStackTrace();
             response.setOperation(Operations.LOGIN);
 
         }
@@ -211,6 +229,7 @@ public class HandleClientThread extends Thread {
         User newUser = ((List<User>) request.getArgument()).get(1);
         Response response = new Response();
         try {
+
             Controller.getInstance().updateUser(oldUser, newUser);
             response.setResponseType(ResponseType.SUCCESS);
 
@@ -420,5 +439,41 @@ public class HandleClientThread extends Thread {
         }
         return response;
     }
+
+    private Response getAllUserRents(Request request) {
+        Response response = new Response();
+        User u = (User) request.getArgument();
+
+        try {
+            List<Rent> rents = Controller.getInstance().getAllUserRents(u);
+            response.setResult(rents);
+            response.setResponseType(ResponseType.SUCCESS);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setResponseType(ResponseType.ERROR);
+            response.setException(e);
+        }
+        return response;
+    }
+
+    private Response getUsersByName(String name) {
+        Response response = new Response();
+        try {
+            List<User> users = Controller.getInstance().getUsersByName(name);
+            response.setResponseType(ResponseType.SUCCESS);
+            response.setResult(users);
+        } catch (Exception e) {
+            response.setResponseType(ResponseType.ERROR);
+            response.setException(e);
+        }
+        return response;
+        }
+
+    private void logout(Request request) {
+        Librarian user=(Librarian) request.getArgument();
+        Controller.getInstance().logout(user);
+        server.setUserLoggedIn(user, false);
+        }
 
 }

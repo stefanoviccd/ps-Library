@@ -3,13 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Dragana%20Stefanovic/Documents/NetBeansProjects/BibilotekaKlijent/src/rs/ac/bg/fon/ps/bibliotekaklijent/view/FrmAddUser.java</file>
-            <file>file:/C:/Users/Dragana%20Stefanovic/Documents/NetBeansProjects/BibilotekaKlijent/src/rs/ac/bg/fon/ps/bibliotekaklijent/view/FrmRentBook.java</file>
-            <file>file:/C:/Users/Dragana%20Stefanovic/Documents/NetBeansProjects/BibilotekaKlijent/src/rs/ac/bg/fon/ps/bibliotekaklijent/view/FrmBooks.java</file>
+            <file>file:/C:/Users/Dragana%20Stefanovic/Documents/NetBeansProjects/BibilotekaKlijent/src/rs/ac/bg/fon/ps/bibliotekaklijent/view/FrmLogin.java</file>
+            <file>file:/C:/Users/Dragana%20Stefanovic/Documents/NetBeansProjects/BibilotekaKlijent/src/rs/ac/bg/fon/ps/biblioteka/bibilotekaklijent/communication/Communication.java</file>
             <file>file:/C:/Users/Dragana%20Stefanovic/Documents/NetBeansProjects/BibilotekaKlijent/src/rs/ac/bg/fon/ps/biblioteka/bibilotekaklijent/client/Client.java</file>
-            <file>file:/C:/Users/Dragana%20Stefanovic/Documents/NetBeansProjects/BibilotekaKlijent/src/rs/ac/bg/fon/ps/bibliotekaklijent/view/FrmAddBook.java</file>
-            <file>file:/C:/Users/Dragana%20Stefanovic/Documents/NetBeansProjects/BibilotekaKlijent/src/rs/ac/bg/fon/ps/biblioteka/bibilotekaklijent/controller/ControllerUI.java</file>
-            <file>file:/C:/Users/Dragana%20Stefanovic/Documents/NetBeansProjects/BibilotekaKlijent/src/rs/ac/bg/fon/ps/bibliotekaklijent/view/FrmStatistics.java</file>
+            <file>file:/C:/Users/Dragana%20Stefanovic/Documents/NetBeansProjects/BibilotekaKlijent/src/rs/ac/bg/fon/ps/bibliotekaklijent/view/tableModel/TableModelUser.java</file>
+            <file>file:/C:/Users/Dragana%20Stefanovic/Documents/NetBeansProjects/BibilotekaKlijent/src/rs/ac/bg/fon/ps/bibliotekaklijent/view/FrmMain.java</file>
+            <file>file:/C:/Users/Dragana%20Stefanovic/Documents/NetBeansProjects/BibilotekaKlijent/src/rs/ac/bg/fon/ps/biblioteka/bibilotekaklijent/client/thread/ServerStoppedListener.java</file>
+            <file>file:/C:/Users/Dragana%20Stefanovic/Documents/NetBeansProjects/BibilotekaKlijent/src/rs/ac/bg/fon/ps/bibliotekaklijent/view/FrmUsers.java</file>
         </group>
     </open-files>
 </project-private>

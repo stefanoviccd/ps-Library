@@ -18,6 +18,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import rs.ac.bg.fon.ps.biblioteka.broker.DatabaseBroker;
 import rs.ac.bg.fon.ps.biblioteka.model.Rent;
 import rs.ac.bg.fon.ps.biblioteka.so.bookCategory.GetBookCategoryIdSO;
 
@@ -31,10 +32,12 @@ public class RepositoryBook implements DbRepository<Book, Long> {
     RepositoryBookCategory repositoryBookCategory = new RepositoryBookCategory();
     Statement statement;
     PreparedStatement ps;
+    private DatabaseBroker databaseBroker;
 
     public RepositoryBook() {
         repositoryAuthor = new RepositoryAuthor();
         repositoryBookCategory = new RepositoryBookCategory();
+        databaseBroker=new DatabaseBroker();
 
     }
 
@@ -55,7 +58,7 @@ public class RepositoryBook implements DbRepository<Book, Long> {
             query = "SELECT * FROM autor WHERE id=" + pisacId;
             List<Author> authors = repositoryAuthor.getByQuery(query);
             if (authors.size() == 0) {
-                throw new Exception();
+                throw new Exception("Nastala je greska kod prikljucivanja autora knjizi.");
             }
             Author author = authors.get(0);
             BookCategory category = BookCategory.valueOf(repositoryBookCategory.getCategoryName(kategorijaId));
@@ -71,36 +74,30 @@ public class RepositoryBook implements DbRepository<Book, Long> {
 
     @Override
     public void add(Book t) throws Exception {
-        List<Author> authors = repositoryAuthor.getByQuery("SELECT * FROM autor WHERE imePrezime='" + t.getAuthor().getAuthorName() + "'");
-        t.setAuthor(authors.get(0));
+       
         boolean status = updateIfExists(t);
         if (status == false) {
-            Long bookCategoryId = repositoryBookCategory.getBookCategoryId(t.getBookCategory().toString());
-            String query = "INSERT INTO knjiga (naziv, godinaIzdanja, kategorijaId, pisacId, kolicina) VALUES (?,?,?,?,?)";
-            ps = DbConnectionFactory.getInstance().getConnection().prepareStatement(query);
-            ps.setString(1, t.getBookName());
-            ps.setInt(2, t.getIssueDate());
-            ps.setLong(3, bookCategoryId);
-            ps.setLong(4, authors.get(0).getAuthorId());
-            ps.setInt(5, t.getNumberInStock());
-            ps.executeUpdate();
-            ps.close();
+            databaseBroker.add(t);
+            
         }
 
     }
 
     @Override
     public void delete(Book t) throws Exception {
-        deleteRents(t);
-        String query = "DELETE FROM knjiga WHERE id=" + t.getBookid();
+                databaseBroker.delete(t);
+       // deleteRents(t);
+        /*String query = "DELETE FROM knjiga WHERE id=" + t.getBookid();
         statement = DbConnectionFactory.getInstance().getConnection().createStatement();
         statement.executeUpdate(query);
+
         statement.close();
-        try {
+       try {
             removeAuthor(t.getAuthor());
         } catch (Exception e) {
             System.out.println("Autor nije obrisan.");
         }
+*/
 
     }
 
@@ -141,7 +138,7 @@ public class RepositoryBook implements DbRepository<Book, Long> {
 
     }
 
-    public void checkIfRentsExist(Book book) throws SQLException, Exception {
+    /*public void checkIfRentsExist(Book book) throws SQLException, Exception {
         String query = "SELECT * FROM iznajmljivanje WHERE knjigaId=" + book.getBookid() + " AND datumVracanja IS NULL";
         statement = DbConnectionFactory.getInstance().getConnection().createStatement();
         ResultSet rs = statement.executeQuery(query);
@@ -150,9 +147,9 @@ public class RepositoryBook implements DbRepository<Book, Long> {
             throw new Exception("Primerci knjige su zaduzeni. Nije moguce dovrsiti operaciju brisanja.");
         }
 
-    }
+    }*/
 
-    private void removeAuthor(Author author) throws SQLException, Exception {
+    /*private void removeAuthor(Author author) throws SQLException, Exception {
         boolean exist = checkIfBooksExist(author);
         if (exist) {
             throw new Exception("Knjige ovog autora postoje na stanju. Nije moguce dovrsiti operaciju brisanja.");
@@ -163,9 +160,9 @@ public class RepositoryBook implements DbRepository<Book, Long> {
             statement.close();
         }
 
-    }
+    }*/
 
-    private boolean checkIfBooksExist(Author author) throws SQLException {
+    public boolean checkIfBooksExist(Author author) throws SQLException {
         boolean exist = false;
         String query = "SELECT * from knjiga WHERE pisacId=" + author.getAuthorId();
         try {
@@ -183,10 +180,10 @@ public class RepositoryBook implements DbRepository<Book, Long> {
 
     }
 
-    private void deleteRents(Book t) throws SQLException {
+   /* private void deleteRents(Book t) throws SQLException {
         RepositoryRent r = new RepositoryRent();
         r.deleteBookRents(t);
-    }
+    }*/
 
     private boolean updateIfExists(Book t) throws Exception {
         Long categoryId = (Long) new GetBookCategoryIdSO().execute(t.getBookCategory().toString());
@@ -203,4 +200,11 @@ public class RepositoryBook implements DbRepository<Book, Long> {
         }
         return false;
     }
+
+    public void updateBookCount(Book b, int i) throws SQLException, IOException {
+        int num = b.getNumberInStock() + i;
+        String updateBookCount = "UPDATE knjiga SET kolicina= " + num + " WHERE id=" + b.getBookid();
+        statement = DbConnectionFactory.getInstance().getConnection().createStatement();
+        statement.executeUpdate(updateBookCount);
+            }
 }

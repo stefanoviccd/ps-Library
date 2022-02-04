@@ -4,6 +4,8 @@
  */
 package rs.ac.bg.fon.ps.biblioteka.so.rent;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import rs.ac.bg.fon.ps.biblioteka.communication.Response;
@@ -11,6 +13,7 @@ import rs.ac.bg.fon.ps.biblioteka.communication.ResponseType;
 import rs.ac.bg.fon.ps.biblioteka.model.Book;
 import rs.ac.bg.fon.ps.biblioteka.model.User;
 import rs.ac.bg.fon.ps.biblioteka.model.UserCard;
+import rs.ac.bg.fon.ps.biblioteka.repository.impl.RepositoryBook;
 import rs.ac.bg.fon.ps.biblioteka.repository.impl.RepositoryRent;
 import rs.ac.bg.fon.ps.biblioteka.repository.impl.RepositoryUser;
 import rs.ac.bg.fon.ps.biblioteka.so.AbstractSO;
@@ -23,9 +26,11 @@ import rs.ac.bg.fon.ps.biblioteka.so.book.GetBooksByQuerySO;
 public class RentBookSO extends AbstractSO {
 
     RepositoryRent repositoryRent;
+    RepositoryBook repositoryBook;
 
     public RentBookSO() {
         repositoryRent = new RepositoryRent();
+        repositoryBook=new RepositoryBook();
     }
 
     @Override
@@ -69,7 +74,7 @@ public class RentBookSO extends AbstractSO {
         Book b = (Book) ((List<Object>) param).get(1);
         try {
             repositoryRent.rentBook(u, b);
-
+            updateBookCount(b,-1);
         } catch (Exception ex) {
 
             throw new Exception(ex.getMessage());
@@ -99,4 +104,9 @@ public class RentBookSO extends AbstractSO {
        if(usercard.getExpiryDate().isBefore(LocalDate.now()))
            throw new Exception("Clanska karta korisnika je istekla. Nije moguce iznajmiti knjigu.");
     }
+
+    private void updateBookCount(Book b, int i) throws SQLException, IOException {
+        repositoryBook.updateBookCount(b,i);
+        
+         }
 }

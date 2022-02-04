@@ -10,7 +10,7 @@ import java.io.Serializable;
  *
  * @author Dragana Stefanovic
  */
-public class Author implements Serializable{
+public class Author extends AbstractDO implements Serializable{
     private Long authorId;
     private String authorName;
 
@@ -41,6 +41,27 @@ public class Author implements Serializable{
     @Override
     public String toString() {
         return authorName;   }
+
+    @Override
+    public String getAttributeList() {
+        return "imePrezime";
+            }
+
+    @Override
+    public String getClassName() {
+        return "autor";
+         }
+
+    @Override
+    public String getAttributeValues() {
+        return "'"+getAuthorName()+"'";
+        
+         }
+
+    @Override
+    public String getQueryCondition() {
+        return "id= "+getAuthorId();
+         }
     
     
 }

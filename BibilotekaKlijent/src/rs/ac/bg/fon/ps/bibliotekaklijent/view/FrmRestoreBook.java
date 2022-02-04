@@ -13,6 +13,7 @@ import rs.ac.bg.fon.ps.biblioteka.model.Rent;
 import rs.ac.bg.fon.ps.biblioteka.model.User;
 import rs.ac.bg.fon.ps.bibliotekaklijent.validation.ValidationException;
 import rs.ac.bg.fon.ps.bibliotekaklijent.validation.Validator;
+import rs.ac.bg.fon.ps.bibliotekaklijent.view.tableModel.TableModelBook;
 import rs.ac.bg.fon.ps.bibliotekaklijent.view.tableModel.TableModelRentedBook;
 import rs.ac.bg.fon.ps.bibliotekaklijent.view.tableModel.TableModelUser;
 
@@ -51,6 +52,9 @@ public class FrmRestoreBook extends javax.swing.JDialog {
         tbtRentedBooks = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tblBooks = new javax.swing.JTable();
+        lblClanskaKarta1 = new javax.swing.JLabel();
+        txtImePrezime = new javax.swing.JTextField();
+        btnFindUserByname = new javax.swing.JButton();
         btnRestore = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -58,7 +62,7 @@ public class FrmRestoreBook extends javax.swing.JDialog {
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Razduživanje knjige"));
         jPanel1.setPreferredSize(new java.awt.Dimension(812, 432));
 
-        lblClanskaKarta.setText("Unesite broj članske karte");
+        lblClanskaKarta.setText("Pretraži broj članske karte");
 
         btnFindUser.setText("Pronađi korisnika");
         btnFindUser.addActionListener(new java.awt.event.ActionListener() {
@@ -107,22 +111,43 @@ public class FrmRestoreBook extends javax.swing.JDialog {
         });
         jScrollPane3.setViewportView(tblBooks);
 
+        lblClanskaKarta1.setText("Pretraži ime i prezime");
+
+        btnFindUserByname.setText("Pronađi korisnika");
+        btnFindUserByname.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFindUserBynameActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 790, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2)
                     .addComponent(jScrollPane3)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(lblClanskaKarta)
-                        .addGap(30, 30, 30)
-                        .addComponent(txtClanskaKarta))
+                        .addContainerGap()
+                        .addComponent(btnFindUser, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(249, 249, 249)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(btnFindUserByname, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(239, 239, 239))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(lblClanskaKarta1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtImePrezime, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tbtRentedBooks, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnFindUser, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(lblClanskaKarta, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtClanskaKarta, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -130,11 +155,18 @@ public class FrmRestoreBook extends javax.swing.JDialog {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(34, 34, 34)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblClanskaKarta)
-                    .addComponent(txtClanskaKarta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(31, 31, 31)
-                .addComponent(btnFindUser)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblClanskaKarta)
+                        .addComponent(txtClanskaKarta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblClanskaKarta1)
+                            .addComponent(txtImePrezime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(31, 31, 31)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnFindUserByname)
+                            .addComponent(btnFindUser))))
                 .addGap(29, 29, 29)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -163,7 +195,7 @@ public class FrmRestoreBook extends javax.swing.JDialog {
                         .addComponent(btnRestore, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 840, Short.MAX_VALUE)
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
@@ -207,13 +239,34 @@ public class FrmRestoreBook extends javax.swing.JDialog {
         if (selectedBook != -1) {
             try {
                 restoreBook(selectedBook);
-                //JOptionPane.showMessageDialog(this,"Sistem je izvršio razduživanje knjige.");
-                JOptionPane.showMessageDialog(this,"Sistem ne može da izvrši razduživanje.","Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this,"Sistem je izvršio razduživanje knjige.");
+               // JOptionPane.showMessageDialog(this,"Sistem ne može da izvrši razduživanje.","Error", JOptionPane.ERROR_MESSAGE);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_btnRestoreActionPerformed
+
+    private void btnFindUserBynameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindUserBynameActionPerformed
+          try {
+            validateInput(txtImePrezime);
+            String name = txtImePrezime.getText().trim();
+            List<User> users = ControllerUI.getInstance().getUsersByName(name);
+            if (users == null || users.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Sistem ne moze da pronadje clana po zadatoj vrednosti.", "Greska", JOptionPane.ERROR_MESSAGE);
+                ((TableModelUser) tblUsers.getModel()).setUsers(new ArrayList<>());
+                ((TableModelRentedBook) tblBooks.getModel()).setRents(new ArrayList<>());
+            } else {
+                JOptionPane.showMessageDialog(this, "Sistem je pronašao člana.");
+                ((TableModelUser) tblUsers.getModel()).setUsers(users);
+            }
+        } catch (ValidationException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Greska", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Greska", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_btnFindUserBynameActionPerformed
 
     /**
      * @param args the command line arguments
@@ -258,16 +311,20 @@ public class FrmRestoreBook extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnFindByName;
     private javax.swing.JButton btnFindUser;
+    private javax.swing.JButton btnFindUserByname;
     private javax.swing.JButton btnRestore;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel lblClanskaKarta;
+    private javax.swing.JLabel lblClanskaKarta1;
     private javax.swing.JTable tblBooks;
     private javax.swing.JTable tblUsers;
     private javax.swing.JLabel tbtRentedBooks;
     private javax.swing.JTextField txtClanskaKarta;
+    private javax.swing.JTextField txtImePrezime;
     // End of variables declaration//GEN-END:variables
 
     private void prepareForm() {

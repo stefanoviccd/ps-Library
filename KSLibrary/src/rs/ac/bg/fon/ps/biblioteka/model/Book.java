@@ -5,12 +5,13 @@
 package rs.ac.bg.fon.ps.biblioteka.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  *
  * @author Dragana Stefanovic
  */
-public class Book implements Serializable {
+public class Book extends AbstractDO implements Serializable {
     private Long bookid;
     private String bookName;
     private Integer issueDate;
@@ -65,6 +66,28 @@ public class Book implements Serializable {
     public void setNumberInStock(Integer numberInStock) {
         this.numberInStock = numberInStock;
     }
+
+    @Override
+    public String getAttributeList() {
+        return "naziv, godinaIzdanja, kategorijaId, pisacId, kolicina";
+       }
+
+    @Override
+    public String getClassName() {
+        return "knjiga";
+        }
+
+    @Override
+    public String getAttributeValues() {
+        int catId=getBookCategory().ordinal()+1;
+        return "'"+getBookName()+"', "+getIssueDate()+", "+catId+", "+getAuthor().getAuthorId()+", "+getNumberInStock();
+        
+          }
+
+    @Override
+    public String getQueryCondition() {
+        return "id="+getBookid();
+            }
     
     
     

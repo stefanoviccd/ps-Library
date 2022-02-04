@@ -8,7 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import rs.ac.bg.fon.ps.biblioteka.db.DbConnectionFactory;
 import rs.ac.bg.fon.ps.biblioteka.model.User;
+import rs.ac.bg.fon.ps.biblioteka.model.UserCategory;
 import rs.ac.bg.fon.ps.biblioteka.repository.impl.RepositoryUser;
+import rs.ac.bg.fon.ps.biblioteka.repository.impl.RepositoryUserCard;
+import rs.ac.bg.fon.ps.biblioteka.repository.impl.RepositoryUserCategory;
 import rs.ac.bg.fon.ps.biblioteka.so.AbstractSO;
 
 /**
@@ -18,9 +21,13 @@ import rs.ac.bg.fon.ps.biblioteka.so.AbstractSO;
 public class UpdateUserSO extends AbstractSO {
 
     RepositoryUser repositoryUser;
+    RepositoryUserCategory repositoryUserCategory;
+    private RepositoryUserCard repositoryUserCard;
 
     public UpdateUserSO() {
         repositoryUser = new RepositoryUser();
+        repositoryUserCategory = new RepositoryUserCategory();
+        repositoryUserCard = new RepositoryUserCard();
     }
 
     @Override
@@ -37,7 +44,6 @@ public class UpdateUserSO extends AbstractSO {
             throw new Exception("Poslati objekat je neodgovarajuceg tipa!");
         } else {
             User newUser = ((List<User>) param).get(1);
-            //   checkValueConstraints(user);
             checkStructuralConstraints(newUser);
         }
 
@@ -48,9 +54,14 @@ public class UpdateUserSO extends AbstractSO {
         List<User> usersForUpdate = (List<User>) param;
         User oldUser = usersForUpdate.get(0);
         User newUser = usersForUpdate.get(1);
+        String query = "SELECT * FROM kategorijaclanova WHERE naziv='" + newUser.getUserCategory().getName() + "'";
+        UserCategory uc = repositoryUserCategory.getByQuery(query).get(0);
+        newUser.setUserCategory(uc);
         try {
-            System.out.println("Udjoh u edit deo");
             repositoryUser.edit(oldUser, newUser);
+            if (!oldUser.getUsercard().getCardNumber().equals(newUser.getUsercard().getCardNumber())) {
+                repositoryUserCard.updateCardNumber(oldUser.getUsercard(), newUser.getUsercard());
+            }
             return null;
         } catch (Exception e) {
             e.printStackTrace();

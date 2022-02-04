@@ -10,7 +10,7 @@ import java.io.Serializable;
  *
  * @author Dragana Stefanovic
  */
-public class User implements Serializable {
+public class User extends AbstractDO implements Serializable {
     private Long userId;
     private String name;
     private String lastName;
@@ -74,6 +74,27 @@ public class User implements Serializable {
     public void setUsercard(UserCard usercard) {
         this.usercard = usercard;
     }
+
+    @Override
+    public String getAttributeList() {
+        return "ime, prezime, brojTelefona, adresa, kategorijaId, clanskaKartaId";
+          }
+
+    @Override
+    public String getClassName() {
+        return "clan";
+            }
+
+    @Override
+    public String getAttributeValues() {
+         return "'"+name+"', '"+lastName+"', '"+phoneNumber+"', '"+address+"', "+userCategory.getUserCategoryId()+", "+usercard.getId();
+        
+          }
+
+    @Override
+    public String getQueryCondition() {
+        return "id="+userId;
+        }
     
     
     

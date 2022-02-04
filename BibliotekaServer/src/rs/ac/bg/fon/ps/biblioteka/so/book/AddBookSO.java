@@ -46,7 +46,10 @@ public class AddBookSO extends AbstractSO {
         try {
             if (dbAuthors.size() == 0) {
                 repositoryAuthor.add(book.getAuthor());
+                
             }
+            Author a=repositoryAuthor.getByQuery("SELECT * FROM autor WHERE imePrezime='" + book.getAuthor().getAuthorName() + "'").get(0);
+            book.setAuthor(a);
             repositoryBook.add(book);
         } catch (Exception e) {
             e.printStackTrace();
@@ -65,8 +68,9 @@ public class AddBookSO extends AbstractSO {
                 }
 
             }
-        } catch (Exception ex) {
+        } catch (Exception ex) {ex.printStackTrace();
             throw new Exception("Greska prilikom provere uslova: AddBookSO");
+            
         }
         return false;
     }

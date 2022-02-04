@@ -61,8 +61,8 @@ public class RepositoryUserCategory implements DbRepository<UserCategory, Long> 
         ResultSet rs = statement.executeQuery(query);
         while (rs.next()) {
             UserCategory kc = new UserCategory();
-            kc.setUserCategoryId(rs.getLong(1));
-            kc.setName(rs.getString(2));
+            kc.setUserCategoryId(rs.getLong("id"));
+            kc.setName(rs.getString("naziv"));
             kc.setMembershipFeeDiscount(rs.getDouble(3));
             userCategories.add(kc);
         }

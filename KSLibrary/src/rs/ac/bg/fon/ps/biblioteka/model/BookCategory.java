@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @author Dragana Stefanovic
  */
 public enum BookCategory implements Serializable{
-    AUTOBIOGRAFIJA,  
+    AUTOBIOGRAFIJA, 
     BIOGRAFIJA, 
     ENCIKLOPEDIJE, 
     ISTORIJA, 
@@ -21,6 +21,7 @@ public enum BookCategory implements Serializable{
     FILOZOFIJA, 
     PESME, 
     UMETNOST, 
-    STRUČNE 
+    STRUČNE; 
     
+
 }
